@@ -68,7 +68,7 @@ body {
 @keyframes airyFadeIn {
   from {
     opacity: 0;
-    transform: translateY(16px);
+    transform: translateY(12px);
     filter: blur(4px);
   }
   to {
@@ -79,15 +79,15 @@ body {
 }
 
 .animate-airy-fade-in {
-  animation: airyFadeIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: airyFadeIn 1.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   opacity: 0;
 }
 
-.animation-delay-200 {
-  animation-delay: 200ms;
+.animation-delay-300 {
+  animation-delay: 300ms;
 }
 
-.animation-delay-400 {
-  animation-delay: 400ms;
+.animation-delay-600 {
+  animation-delay: 600ms;
 }
 
