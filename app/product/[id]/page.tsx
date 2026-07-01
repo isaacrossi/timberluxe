@@ -39,10 +39,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
   return (
     <div className="relative min-h-screen w-full bg-[hsl(42,100%,88%)] p-5 md:p-8 flex flex-col text-stone-900">
       {/* Frame matching the Hero borders for visual continuity */}
-      <div className="relative flex-1 border border-stone-900/15 w-full flex flex-col justify-between bg-transparent p-6 md:p-8">
+      <div className="relative flex-1 border border-stone-900/15 w-full flex flex-col justify-between bg-transparent">
         
         {/* Header Row */}
-        <header className="w-full flex items-center justify-between border-b border-stone-900/10 pb-4 z-10">
+        <header className="w-full flex items-center justify-between border-b border-stone-900/15 py-4 px-6 md:px-8 z-10">
           <Link href="/" className="flex items-center gap-3">
             <span className="font-serif tracking-[0.25em] text-base font-bold text-stone-900 leading-none">
               TIMBERLUXE
@@ -58,7 +58,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
         </header>
 
         {/* Main content grid */}
-        <main className="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center z-10 w-full my-6 md:my-10">
+        <main className="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center z-10 w-full px-6 md:px-8 py-8 md:py-12">
           {/* Left: Product Media Gallery (Images & Videos) */}
           <div className="w-full">
             <ProductMediaGallery
@@ -126,9 +126,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
         </main>
 
         {/* Footer info/metadata matching homepage layout */}
-        <footer className="w-full border-t border-stone-900/10 pt-4 flex flex-col sm:flex-row justify-between text-[9px] uppercase tracking-[0.2em] text-stone-500 font-bold z-10 gap-2 sm:gap-0">
-          <span>TIMBERLUXE Atelier © 2026</span>
-          <span>Crafted in Melbourne, Australia</span>
+        <footer className="w-full border-t border-stone-900/15 py-4 px-6 md:px-8 flex flex-col sm:flex-row justify-between text-[10px] uppercase tracking-[0.2em] text-stone-600 font-bold z-10 gap-2 sm:gap-0">
+          <span>TIMBERLUXE © 2026</span>
+          <span>Crafted in Sydney, Australia</span>
         </footer>
       </div>
     </div>

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { getProductById, saveProduct } from '@/lib/db';
+import { toCurrencyFromCent } from '@/lib/currency';
 
 interface SuccessPageProps {
   searchParams: Promise<{
@@ -59,7 +60,7 @@ export default async function PurchaseSuccessPage({ searchParams }: SuccessPageP
                 {product.subtitle}
               </span>
               <span className="font-mono text-stone-900 text-sm font-semibold mt-3">
-                ${product.price} AUD
+                {toCurrencyFromCent(product.price)}
               </span>
             </div>
           </div>
@@ -77,14 +78,14 @@ export default async function PurchaseSuccessPage({ searchParams }: SuccessPageP
         )}
 
         <p className="text-stone-600 text-xs md:text-sm font-light leading-relaxed mb-8 max-w-sm">
-          A receipt has been generated. The atelier will coordinate white-glove courier delivery for this physical work shortly.
+          A receipt has been generated. We will coordinate white-glove courier delivery for this physical work shortly.
         </p>
 
         <Link
           href="/"
           className="h-12 px-8 flex items-center justify-center rounded-full bg-stone-900 text-stone-100 font-semibold text-xs uppercase tracking-[0.2em] hover:bg-stone-850 transition-all duration-300 shadow-[0_4px_15px_rgba(0,0,0,0.1)] hover:scale-[1.01]"
         >
-          Return to Atelier
+          Return to Works
         </Link>
       </div>
     </div>

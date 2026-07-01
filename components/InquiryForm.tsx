@@ -1,10 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
 
-export default function InquiryForm() {
-  const searchParams = useSearchParams();
+export default function InquiryForm({ initialProduct }: { initialProduct?: string }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
@@ -12,19 +10,18 @@ export default function InquiryForm() {
 
   // Pre-fill message if product query parameter is provided
   useEffect(() => {
-    const productParam = searchParams.get("product");
-    if (productParam) {
+    if (initialProduct) {
       const productNames: { [key: string]: string } = {
         "burl-plum-board": "Burl & Plum Board",
         "charcoal-serving-board": "Charcoal Serving Board",
         "teal-river-plank": "Teal River Plank",
       };
-      const name = productNames[productParam];
+      const name = productNames[initialProduct];
       if (name) {
         setMessage(`I would like to inquire about acquiring the ${name}. `);
       }
     }
-  }, [searchParams]);
+  }, [initialProduct]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,7 +39,7 @@ export default function InquiryForm() {
           Inquiry Received
         </h3>
         <p className="text-stone-600 text-xs md:text-sm font-light leading-relaxed mt-3 max-w-sm">
-          Thank you for your interest in Timberluxe. Our atelier team will review your inquiry and connect with you within 24 hours.
+          Thank you for your interest in Timberluxe. Our team will review your inquiry and connect with you within 24 hours.
         </p>
         <button
           onClick={() => {

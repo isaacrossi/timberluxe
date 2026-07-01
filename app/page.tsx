@@ -7,7 +7,12 @@ import InquiryForm from "@/components/InquiryForm";
 import { getProducts, getAboutText } from "@/lib/db";
 import { toCurrencyFromCent } from "@/lib/currency";
 
-export default async function Home() {
+interface PageProps {
+  searchParams: Promise<{ product?: string }>;
+}
+
+export default async function Home({ searchParams }: PageProps) {
+  const { product } = await searchParams;
   const products = await getProducts();
   const aboutText = await getAboutText();
   return (
@@ -32,28 +37,22 @@ export default async function Home() {
             {/* Navigation Links */}
             <nav className="hidden md:flex items-center gap-6 text-[10px] uppercase tracking-[0.2em] text-stone-400 font-bold">
               <a
-                href="#philosophy"
-                className="hover:text-stone-100 transition-colors py-1"
-              >
-                Philosophy
-              </a>
-              <a
                 href="#commissions"
                 className="hover:text-stone-100 transition-colors py-1"
               >
-                Commissions
+                Works
               </a>
               <a
-                href="#process"
+                href="#about"
                 className="hover:text-stone-100 transition-colors py-1"
               >
-                The Process
+                About
               </a>
               <a
                 href="#inquire"
                 className="hover:text-stone-100 transition-colors py-1"
               >
-                Inquire
+                Inquiries
               </a>
             </nav>
           </header>
@@ -150,7 +149,7 @@ export default async function Home() {
         </section>
 
         {/* About Section */}
-        <section id="philosophy" className="bg-[#2b2517] p-5 md:p-8">
+        <section id="about" className="bg-[#2b2517] p-5 md:p-8">
           <div className="relative border border-white/10 w-full flex flex-col bg-transparent text-stone-200">
             {/* Top Part: 50/50 Split Text */}
             <div className="grid grid-cols-1 md:grid-cols-2 border-b border-white/10">
@@ -173,7 +172,7 @@ export default async function Home() {
             <div className="relative aspect-[21/9] md:aspect-[3/1] w-full overflow-hidden bg-stone-900/5">
               <ParallaxImage
                 src="/about_studio.png"
-                alt="Raw timber slabs and artisan tools in the Timberluxe Melbourne workshop"
+                alt="Raw timber slabs and artisan tools in the Timberluxe Sydney workshop"
                 sizes="100vw"
                 speed={10}
                 className="grayscale contrast-[1.08] brightness-90"
@@ -201,7 +200,7 @@ export default async function Home() {
                   </div>
                 }
               >
-                <InquiryForm />
+                <InquiryForm initialProduct={product} />
               </Suspense>
             </div>
           </div>
@@ -211,18 +210,15 @@ export default async function Home() {
         <section className="bg-[hsl(42,100%,88%)] p-5 md:p-8">
           <div className="relative border border-stone-900/15 w-full flex flex-col justify-between bg-transparent text-stone-900">
             {/* Editorial Footer Section */}
-            <footer className="w-full pt-12 pb-8 px-6 md:px-8 mt-auto flex flex-col z-10 bg-stone-900/[0.01]">
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+            <footer className="w-full mt-auto flex flex-col z-10 bg-stone-900/[0.01]">
+              <div className="pt-12 pb-12 px-6 md:px-8 grid grid-cols-1 md:grid-cols-4 gap-8">
                 {/* Brand Column */}
                 <div className="flex flex-col gap-4 col-span-1 md:col-span-2">
                   <span className="font-serif tracking-[0.25em] text-lg font-bold text-stone-900 leading-none">
                     TIMBERLUXE
                   </span>
                   <p className="text-stone-600 text-xs md:text-sm font-light leading-relaxed max-w-sm">
-                    An independent Australian design collective crafting
-                    premium, physical works of art. Fusing high-character
-                    hardwoods, custom polymer resin flow, and architectural
-                    scale.
+                    Handcrafted ornamental timber and resin art
                   </p>
                 </div>
 
@@ -238,16 +234,16 @@ export default async function Home() {
                     Works
                   </Link>
                   <Link
-                    href="#philosophy"
+                    href="#about"
                     className="text-stone-700 hover:text-stone-950 transition-colors text-xs font-light"
                   >
-                    Philosophy
+                    About
                   </Link>
                   <Link
                     href="#inquire"
                     className="text-stone-700 hover:text-stone-950 transition-colors text-xs font-light"
                   >
-                    Acquisitions
+                    Inquiries
                   </Link>
                 </div>
 
@@ -257,32 +253,20 @@ export default async function Home() {
                     Connect
                   </span>
                   <a
-                    href="https://instagram.com/pbernatz"
+                    href="https://www.instagram.com/timber_luxe/"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-stone-700 hover:text-stone-950 transition-colors text-xs font-light"
                   >
                     Instagram
                   </a>
-                  <a
-                    href="#"
-                    className="text-stone-700 hover:text-stone-950 transition-colors text-xs font-light"
-                  >
-                    Pinterest
-                  </a>
-                  <a
-                    href="#"
-                    className="text-stone-700 hover:text-stone-950 transition-colors text-xs font-light"
-                  >
-                    Journal
-                  </a>
                 </div>
               </div>
 
               {/* Bottom Bar */}
-              <div className="border-t border-stone-900/10 pt-6 flex flex-col sm:flex-row justify-between text-[9px] uppercase tracking-[0.2em] text-stone-500 font-bold gap-2 sm:gap-0">
-                <span>TIMBERLUXE Atelier © 2026</span>
-                <span>Crafted in Melbourne, Australia</span>
+              <div className="border-t border-stone-900/15 py-4 px-6 md:px-8 flex flex-col sm:flex-row justify-between text-[10px] uppercase tracking-[0.2em] text-stone-600 font-bold gap-2 sm:gap-0">
+                <span>TIMBERLUXE © 2026</span>
+                <span>Crafted in Sydney, Australia</span>
               </div>
             </footer>
           </div>

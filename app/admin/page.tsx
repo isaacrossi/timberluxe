@@ -36,7 +36,7 @@ function AdminLogin() {
             TIMBERLUXE
           </span>
           <span className="text-[10px] uppercase tracking-[0.3em] text-amber-500 font-bold mb-8">
-            ATELIER ADMIN
+            ADMIN PORTAL
           </span>
 
           <LoginForm />

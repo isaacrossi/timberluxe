@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from 'react';
-import Image from 'next/image';
-import { Product, ProductSpec, ProductMedia } from '@/lib/products';
-import { toCurrencyFromCent, toCent, fromCent } from '@/lib/currency';
+import { useState } from "react";
+import Image from "next/image";
+import { Product, ProductSpec, ProductMedia } from "@/lib/products";
+import { toCurrencyFromCent, toCent, fromCent } from "@/lib/currency";
 
 interface AdminDashboardClientProps {
   initialProducts: Product[];
@@ -14,17 +14,19 @@ export default function AdminDashboardClient({
   initialProducts,
   initialAboutText,
 }: AdminDashboardClientProps) {
-  const [activeTab, setActiveTab] = useState<'info' | 'catalog'>('catalog');
+  const [activeTab, setActiveTab] = useState<"info" | "catalog">("catalog");
   const [products, setProducts] = useState<Product[]>(initialProducts);
   const [aboutText, setAboutText] = useState<string>(initialAboutText);
-  
+
   // Info Save State
   const [savingInfo, setSavingInfo] = useState(false);
-  const [infoMessage, setInfoMessage] = useState({ text: '', type: 'success' });
+  const [infoMessage, setInfoMessage] = useState({ text: "", type: "success" });
 
   // Catalog Form / Editor State
   const [isEditing, setIsEditing] = useState(false);
-  const [editingProduct, setEditingProduct] = useState<Partial<Product> | null>(null);
+  const [editingProduct, setEditingProduct] = useState<Partial<Product> | null>(
+    null,
+  );
   const [formSpecs, setFormSpecs] = useState<ProductSpec[]>([]);
   const [formMedia, setFormMedia] = useState<ProductMedia[]>([]);
   const [uploadingFile, setUploadingFile] = useState<string | null>(null); // 'main' | 'gallery' | null
@@ -33,29 +35,36 @@ export default function AdminDashboardClient({
   // LOGOUT
   const handleLogout = async () => {
     // Clear cookie by requesting verification with empty details, or just expire cookie client-side
-    document.cookie = "timberluxe_admin_session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie =
+      "timberluxe_admin_session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     window.location.reload();
   };
 
   // ABOUT SAVE
   const handleSaveAbout = async () => {
     setSavingInfo(true);
-    setInfoMessage({ text: '', type: 'success' });
+    setInfoMessage({ text: "", type: "success" });
     try {
-      const res = await fetch('/api/about', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("/api/about", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text: aboutText }),
       });
       if (res.ok) {
-        setInfoMessage({ text: 'Atelier description saved successfully.', type: 'success' });
+        setInfoMessage({
+          text: "Studio description saved successfully.",
+          type: "success",
+        });
       } else {
         const d = await res.json();
-        setInfoMessage({ text: d.error || 'Failed to save description.', type: 'error' });
+        setInfoMessage({
+          text: d.error || "Failed to save description.",
+          type: "error",
+        });
       }
     } catch (err) {
       console.error(err);
-      setInfoMessage({ text: 'Connection error.', type: 'error' });
+      setInfoMessage({ text: "Connection error.", type: "error" });
     } finally {
       setSavingInfo(false);
     }
@@ -75,27 +84,27 @@ export default function AdminDashboardClient({
   // PRODUCT CREATE TRIGGER
   const handleCreateProduct = () => {
     setEditingProduct({
-      id: '',
-      name: '',
-      price: '',
-      subtitle: '',
-      description: '',
-      image: '',
-      alt: '',
+      id: "",
+      name: "",
+      price: "",
+      subtitle: "",
+      description: "",
+      image: "",
+      alt: "",
       specs: [
-        { label: 'Timber', value: '' },
-        { label: 'Resin', value: '' },
-        { label: 'Dimensions', value: '' },
-        { label: 'Finish', value: '' },
+        { label: "Timber", value: "" },
+        { label: "Resin", value: "" },
+        { label: "Dimensions", value: "" },
+        { label: "Finish", value: "" },
       ],
       media: [],
       sold: false,
     });
     setFormSpecs([
-      { label: 'Timber', value: '' },
-      { label: 'Resin', value: '' },
-      { label: 'Dimensions', value: '' },
-      { label: 'Finish', value: '' },
+      { label: "Timber", value: "" },
+      { label: "Resin", value: "" },
+      { label: "Dimensions", value: "" },
+      { label: "Finish", value: "" },
     ]);
     setFormMedia([]);
     setIsEditing(true);
@@ -106,22 +115,26 @@ export default function AdminDashboardClient({
     if (!editingProduct) return;
     const updates: Partial<Product> = { name };
     // Only auto-generate ID if we are creating a new product
-    const isNew = products.findIndex(p => p.id === editingProduct.id) === -1;
+    const isNew = products.findIndex((p) => p.id === editingProduct.id) === -1;
     if (isNew) {
       updates.id = name
         .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/(^-|-$)/g, '');
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, "");
     }
-    setEditingProduct(prev => ({ ...prev, ...updates }));
+    setEditingProduct((prev) => ({ ...prev, ...updates }));
   };
 
   // SPEC HANDLERS
   const handleAddSpec = () => {
-    setFormSpecs([...formSpecs, { label: '', value: '' }]);
+    setFormSpecs([...formSpecs, { label: "", value: "" }]);
   };
 
-  const handleUpdateSpec = (idx: number, field: 'label' | 'value', val: string) => {
+  const handleUpdateSpec = (
+    idx: number,
+    field: "label" | "value",
+    val: string,
+  ) => {
     const updated = [...formSpecs];
     updated[idx][field] = val;
     setFormSpecs(updated);
@@ -134,7 +147,10 @@ export default function AdminDashboardClient({
   };
 
   // FILE UPLOAD HANDLING
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, target: 'main' | 'gallery') => {
+  const handleFileUpload = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+    target: "main" | "gallery",
+  ) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
@@ -143,31 +159,31 @@ export default function AdminDashboardClient({
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
         const formData = new FormData();
-        formData.append('file', file);
+        formData.append("file", file);
 
-        const res = await fetch('/api/upload', {
-          method: 'POST',
+        const res = await fetch("/api/upload", {
+          method: "POST",
           body: formData,
         });
 
         if (res.ok) {
           const data = await res.json();
-          if (target === 'main') {
-            setEditingProduct(prev => ({
+          if (target === "main") {
+            setEditingProduct((prev) => ({
               ...prev,
               image: data.url,
-              alt: prev?.alt || prev?.name || 'Product Image',
+              alt: prev?.alt || prev?.name || "Product Image",
             }));
             // Break loop since main image only allows one file
             break;
           } else {
-            const isVideo = file.type.startsWith('video/');
+            const isVideo = file.type.startsWith("video/");
             const newMediaItem: ProductMedia = {
-              type: isVideo ? 'video' : 'image',
+              type: isVideo ? "video" : "image",
               url: data.url,
               alt: file.name,
             };
-            setFormMedia(prev => [...prev, newMediaItem]);
+            setFormMedia((prev) => [...prev, newMediaItem]);
           }
         } else {
           alert(`Failed to upload file ${file.name}`);
@@ -175,10 +191,10 @@ export default function AdminDashboardClient({
       }
     } catch (err) {
       console.error(err);
-      alert('Error uploading file');
+      alert("Error uploading file");
     } finally {
       setUploadingFile(null);
-      e.target.value = ''; // Reset input
+      e.target.value = ""; // Reset input
     }
   };
 
@@ -191,8 +207,13 @@ export default function AdminDashboardClient({
   // PRODUCT SAVE
   const handleSaveProduct = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!editingProduct || !editingProduct.id || !editingProduct.name || !editingProduct.price) {
-      alert('Please fill out all required fields.');
+    if (
+      !editingProduct ||
+      !editingProduct.id ||
+      !editingProduct.name ||
+      !editingProduct.price
+    ) {
+      alert("Please fill out all required fields.");
       return;
     }
 
@@ -201,25 +222,25 @@ export default function AdminDashboardClient({
       id: editingProduct.id,
       name: editingProduct.name,
       price: toCent(Number(editingProduct.price)),
-      subtitle: editingProduct.subtitle || '',
-      description: editingProduct.description || '',
-      image: editingProduct.image || '',
-      alt: editingProduct.alt || '',
-      specs: formSpecs.filter(s => s.label.trim() !== ''),
+      subtitle: editingProduct.subtitle || "",
+      description: editingProduct.description || "",
+      image: editingProduct.image || "",
+      alt: editingProduct.alt || "",
+      specs: formSpecs.filter((s) => s.label.trim() !== ""),
       media: formMedia,
       sold: !!editingProduct.sold,
     };
 
     try {
-      const res = await fetch('/api/products', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("/api/products", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(cleanedProduct),
       });
 
       if (res.ok) {
         // Update local state
-        const index = products.findIndex(p => p.id === cleanedProduct.id);
+        const index = products.findIndex((p) => p.id === cleanedProduct.id);
         if (index >= 0) {
           const updated = [...products];
           updated[index] = cleanedProduct;
@@ -231,11 +252,11 @@ export default function AdminDashboardClient({
         setEditingProduct(null);
       } else {
         const d = await res.json();
-        alert(d.error || 'Failed to save product');
+        alert(d.error || "Failed to save product");
       }
     } catch (err) {
       console.error(err);
-      alert('Connection error saving product.');
+      alert("Connection error saving product.");
     } finally {
       setSavingProduct(false);
     }
@@ -243,21 +264,26 @@ export default function AdminDashboardClient({
 
   // PRODUCT DELETE
   const handleDeleteProduct = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this piece? This action is permanent.')) return;
+    if (
+      !confirm(
+        "Are you sure you want to delete this piece? This action is permanent.",
+      )
+    )
+      return;
 
     try {
       const res = await fetch(`/api/products/${id}`, {
-        method: 'DELETE',
+        method: "DELETE",
       });
 
       if (res.ok) {
-        setProducts(products.filter(p => p.id !== id));
+        setProducts(products.filter((p) => p.id !== id));
       } else {
-        alert('Failed to delete product');
+        alert("Failed to delete product");
       }
     } catch (err) {
       console.error(err);
-      alert('Connection error');
+      alert("Connection error");
     }
   };
 
@@ -267,7 +293,7 @@ export default function AdminDashboardClient({
       <header className="w-full border-b border-stone-800 bg-[#161619]/90 backdrop-blur-md px-6 md:px-8 py-5 flex items-center justify-between sticky top-0 z-30">
         <div className="flex items-center gap-4">
           <span className="font-serif tracking-[0.2em] text-sm md:text-base font-bold text-stone-100">
-            TIMBERLUXE ATELIER
+            TIMBERLUXE ADMIN
           </span>
           <span className="text-[9px] px-2 py-0.5 rounded border border-amber-500/30 text-amber-500 uppercase tracking-widest font-semibold font-mono">
             CMS Panel
@@ -288,38 +314,50 @@ export default function AdminDashboardClient({
         {/* Navigation Tabs */}
         <div className="flex border-b border-stone-850 gap-8">
           <button
-            onClick={() => { setActiveTab('catalog'); setIsEditing(false); }}
+            onClick={() => {
+              setActiveTab("catalog");
+              setIsEditing(false);
+            }}
             className={`pb-4 text-xs uppercase tracking-[0.2em] font-semibold transition-all duration-300 relative ${
-              activeTab === 'catalog' ? 'text-amber-500' : 'text-stone-400 hover:text-stone-200'
+              activeTab === "catalog"
+                ? "text-amber-500"
+                : "text-stone-400 hover:text-stone-200"
             }`}
           >
             Works Catalog ({products.length})
-            {activeTab === 'catalog' && (
+            {activeTab === "catalog" && (
               <span className="absolute bottom-0 left-0 right-0 h-px bg-amber-500" />
             )}
           </button>
           <button
-            onClick={() => { setActiveTab('info'); setIsEditing(false); }}
+            onClick={() => {
+              setActiveTab("info");
+              setIsEditing(false);
+            }}
             className={`pb-4 text-xs uppercase tracking-[0.2em] font-semibold transition-all duration-300 relative ${
-              activeTab === 'info' ? 'text-amber-500' : 'text-stone-400 hover:text-stone-200'
+              activeTab === "info"
+                ? "text-amber-500"
+                : "text-stone-400 hover:text-stone-200"
             }`}
           >
-            Atelier Info
-            {activeTab === 'info' && (
+            Studio Info
+            {activeTab === "info" && (
               <span className="absolute bottom-0 left-0 right-0 h-px bg-amber-500" />
             )}
           </button>
         </div>
 
-        {/* TAB: ATELIER INFO */}
-        {activeTab === 'info' && (
+        {/* TAB: STUDIO INFO */}
+        {activeTab === "info" && (
           <div className="max-w-3xl flex flex-col gap-6 bg-[#161619] border border-stone-850 p-6 md:p-8">
             <div className="flex flex-col gap-2">
               <h2 className="font-serif text-2xl text-stone-100 font-light">
                 Edit Studio Description
               </h2>
               <p className="text-stone-400 text-xs font-light leading-relaxed">
-                This is the main block of text displayed in the "About" section on the homepage. Keep it storytelling-focused and atmospheric.
+                This is the main block of text displayed in the
+                &quot;About&quot; section on the homepage. Keep it
+                storytelling-focused and atmospheric.
               </p>
             </div>
 
@@ -336,11 +374,13 @@ export default function AdminDashboardClient({
             </div>
 
             {infoMessage.text && (
-              <div className={`p-4 text-xs uppercase tracking-wider rounded border ${
-                infoMessage.type === 'success' 
-                  ? 'bg-emerald-950/20 border-emerald-900/30 text-emerald-400' 
-                  : 'bg-red-950/20 border-red-900/30 text-red-400'
-              }`}>
+              <div
+                className={`p-4 text-xs uppercase tracking-wider rounded border ${
+                  infoMessage.type === "success"
+                    ? "bg-emerald-950/20 border-emerald-900/30 text-emerald-400"
+                    : "bg-red-950/20 border-red-900/30 text-red-400"
+                }`}
+              >
                 {infoMessage.text}
               </div>
             )}
@@ -363,7 +403,7 @@ export default function AdminDashboardClient({
         )}
 
         {/* TAB: CATALOG LIST */}
-        {activeTab === 'catalog' && !isEditing && (
+        {activeTab === "catalog" && !isEditing && (
           <div className="flex flex-col gap-6">
             <div className="w-full flex justify-between items-center">
               <div className="flex flex-col gap-1">
@@ -384,7 +424,8 @@ export default function AdminDashboardClient({
 
             {products.length === 0 ? (
               <div className="w-full border border-stone-850 p-12 text-center text-stone-500 text-sm font-light">
-                No items in catalog. Click "+ Create New Work" to add your first piece.
+                No items in catalog. Click &quot;+ Create New Work&quot; to add
+                your first piece.
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -431,7 +472,7 @@ export default function AdminDashboardClient({
                           {product.subtitle}
                         </span>
                         <p className="text-stone-400 text-xs font-light leading-relaxed mt-2 line-clamp-2 italic">
-                          "{product.description}"
+                          &quot;{product.description}&quot;
                         </p>
                       </div>
 
@@ -458,12 +499,17 @@ export default function AdminDashboardClient({
         )}
 
         {/* TAB: CATALOG ADD / EDIT FORM */}
-        {activeTab === 'catalog' && isEditing && editingProduct && (
-          <form onSubmit={handleSaveProduct} className="max-w-4xl w-full flex flex-col gap-8 bg-[#161619] border border-stone-850 p-6 md:p-8">
+        {activeTab === "catalog" && isEditing && editingProduct && (
+          <form
+            onSubmit={handleSaveProduct}
+            className="max-w-4xl w-full flex flex-col gap-8 bg-[#161619] border border-stone-850 p-6 md:p-8"
+          >
             <div className="flex items-center justify-between border-b border-stone-850 pb-4">
               <div className="flex flex-col gap-1">
                 <h2 className="font-serif text-2xl text-stone-100 font-light">
-                  {products.some(p => p.id === editingProduct.id) ? 'Edit Physical Work' : 'Create New Work'}
+                  {products.some((p) => p.id === editingProduct.id)
+                    ? "Edit Physical Work"
+                    : "Create New Work"}
                 </h2>
                 <p className="text-stone-400 text-xs font-light">
                   Specify details, specifications, images, and videos.
@@ -471,7 +517,10 @@ export default function AdminDashboardClient({
               </div>
               <button
                 type="button"
-                onClick={() => { setIsEditing(false); setEditingProduct(null); }}
+                onClick={() => {
+                  setIsEditing(false);
+                  setEditingProduct(null);
+                }}
                 className="text-[10px] uppercase tracking-[0.15em] text-stone-400 hover:text-stone-200 transition-colors font-bold"
               >
                 Back to Catalog
@@ -487,7 +536,7 @@ export default function AdminDashboardClient({
                 </label>
                 <input
                   type="text"
-                  value={editingProduct.name || ''}
+                  value={editingProduct.name || ""}
                   onChange={(e) => handleNameChange(e.target.value)}
                   placeholder="e.g. Amber Burl Table"
                   required
@@ -499,15 +548,22 @@ export default function AdminDashboardClient({
               <div className="flex flex-col gap-1.5">
                 <label className="text-[10px] uppercase tracking-[0.15em] text-stone-400 font-semibold flex items-center gap-1.5">
                   Slug / Unique ID <span className="text-amber-500">*</span>
-                  <span className="text-[9px] text-stone-500 capitalize font-normal">(Used in URL path)</span>
+                  <span className="text-[9px] text-stone-500 capitalize font-normal">
+                    (Used in URL path)
+                  </span>
                 </label>
                 <input
                   type="text"
-                  value={editingProduct.id || ''}
-                  onChange={(e) => setEditingProduct(prev => ({ ...prev, id: e.target.value }))}
+                  value={editingProduct.id || ""}
+                  onChange={(e) =>
+                    setEditingProduct((prev) => ({
+                      ...prev,
+                      id: e.target.value,
+                    }))
+                  }
                   placeholder="e.g. amber-burl-table"
                   required
-                  disabled={products.some(p => p.id === editingProduct.id)} // Cannot change ID once created
+                  disabled={products.some((p) => p.id === editingProduct.id)} // Cannot change ID once created
                   className="w-full h-11 px-4 bg-stone-900 border border-stone-800 rounded-md focus:border-amber-500/40 text-stone-200 outline-none text-sm disabled:opacity-50 disabled:cursor-not-allowed font-mono"
                 />
               </div>
@@ -520,8 +576,13 @@ export default function AdminDashboardClient({
                 <input
                   type="number"
                   min="0"
-                  value={editingProduct.price ?? ''}
-                  onChange={(e) => setEditingProduct(prev => ({ ...prev, price: e.target.value }))}
+                  value={editingProduct.price ?? ""}
+                  onChange={(e) =>
+                    setEditingProduct((prev) => ({
+                      ...prev,
+                      price: e.target.value,
+                    }))
+                  }
                   placeholder="e.g. 450"
                   required
                   className="w-full h-11 px-4 bg-stone-900 border border-stone-800 rounded-md focus:border-amber-500/40 text-stone-200 outline-none text-sm"
@@ -535,8 +596,13 @@ export default function AdminDashboardClient({
                 </label>
                 <input
                   type="text"
-                  value={editingProduct.subtitle || ''}
-                  onChange={(e) => setEditingProduct(prev => ({ ...prev, subtitle: e.target.value }))}
+                  value={editingProduct.subtitle || ""}
+                  onChange={(e) =>
+                    setEditingProduct((prev) => ({
+                      ...prev,
+                      subtitle: e.target.value,
+                    }))
+                  }
                   placeholder="e.g. 04 / English Oak & Amber Resin"
                   className="w-full h-11 px-4 bg-stone-900 border border-stone-800 rounded-md focus:border-amber-500/40 text-stone-200 outline-none text-sm"
                 />
@@ -548,12 +614,22 @@ export default function AdminDashboardClient({
                   <input
                     type="checkbox"
                     checked={editingProduct.sold || false}
-                    onChange={(e) => setEditingProduct(prev => ({ ...prev, sold: e.target.checked }))}
+                    onChange={(e) =>
+                      setEditingProduct((prev) => ({
+                        ...prev,
+                        sold: e.target.checked,
+                      }))
+                    }
                     className="w-5 h-5 rounded border border-stone-800 bg-stone-900 checked:bg-amber-500 text-amber-500 focus:ring-0 outline-none accent-amber-500 cursor-pointer"
                   />
                   <div className="flex flex-col">
-                    <span className="text-xs uppercase tracking-[0.1em] font-semibold">Mark Piece as Sold</span>
-                    <span className="text-[9px] text-stone-500">Hides the purchase button and displays "Sold" overlay.</span>
+                    <span className="text-xs uppercase tracking-[0.1em] font-semibold">
+                      Mark Piece as Sold
+                    </span>
+                    <span className="text-[9px] text-stone-500">
+                      Hides the purchase button and displays &quot;Sold&quot;
+                      overlay.
+                    </span>
                   </div>
                 </label>
               </div>
@@ -565,8 +641,13 @@ export default function AdminDashboardClient({
                 Description
               </label>
               <textarea
-                value={editingProduct.description || ''}
-                onChange={(e) => setEditingProduct(prev => ({ ...prev, description: e.target.value }))}
+                value={editingProduct.description || ""}
+                onChange={(e) =>
+                  setEditingProduct((prev) => ({
+                    ...prev,
+                    description: e.target.value,
+                  }))
+                }
                 placeholder="Write a storytelling description for the collectors..."
                 rows={4}
                 className="w-full p-4 bg-stone-900 border border-stone-800 rounded-md focus:border-amber-500/40 text-stone-200 outline-none text-sm leading-relaxed"
@@ -594,14 +675,18 @@ export default function AdminDashboardClient({
                     <input
                       type="text"
                       value={spec.label}
-                      onChange={(e) => handleUpdateSpec(index, 'label', e.target.value)}
+                      onChange={(e) =>
+                        handleUpdateSpec(index, "label", e.target.value)
+                      }
                       placeholder="Label (e.g. Timber)"
                       className="flex-1 h-10 px-4 bg-stone-900 border border-stone-800 rounded-md focus:border-amber-500/30 text-stone-200 outline-none text-xs uppercase tracking-wider font-semibold"
                     />
                     <input
                       type="text"
                       value={spec.value}
-                      onChange={(e) => handleUpdateSpec(index, 'value', e.target.value)}
+                      onChange={(e) =>
+                        handleUpdateSpec(index, "value", e.target.value)
+                      }
                       placeholder="Value (e.g. English Burr Oak)"
                       className="flex-2 h-10 px-4 bg-stone-900 border border-stone-800 rounded-md focus:border-amber-500/30 text-stone-200 outline-none text-xs"
                     />
@@ -611,9 +696,18 @@ export default function AdminDashboardClient({
                       className="text-stone-500 hover:text-red-500 transition-colors p-1"
                       title="Remove specification"
                     >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-                        <path fillRule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3h11V2h-11v1z"/>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        fill="currentColor"
+                        viewBox="0 0 16 16"
+                      >
+                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                        <path
+                          fillRule="evenodd"
+                          d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3h11V2h-11v1z"
+                        />
                       </svg>
                     </button>
                   </div>
@@ -628,7 +722,8 @@ export default function AdminDashboardClient({
                   Main Cover Image
                 </label>
                 <p className="text-stone-500 text-[10px] leading-relaxed">
-                  The primary thumbnail displayed in the catalog grid and at the top of the product page.
+                  The primary thumbnail displayed in the catalog grid and at the
+                  top of the product page.
                 </p>
               </div>
 
@@ -637,7 +732,7 @@ export default function AdminDashboardClient({
                   {editingProduct.image ? (
                     <Image
                       src={editingProduct.image}
-                      alt={editingProduct.alt || ''}
+                      alt={editingProduct.alt || ""}
                       fill
                       sizes="192px"
                       className="object-cover"
@@ -650,12 +745,14 @@ export default function AdminDashboardClient({
                 <div className="flex-1 flex flex-col gap-3">
                   <div className="flex items-center gap-3">
                     <label className="h-10 px-4 flex items-center justify-center rounded border border-stone-750 bg-stone-800 text-stone-200 text-xs font-semibold cursor-pointer hover:bg-stone-750 transition-colors uppercase tracking-widest disabled:opacity-50">
-                      {uploadingFile === 'main' ? 'Uploading...' : 'Choose File'}
+                      {uploadingFile === "main"
+                        ? "Uploading..."
+                        : "Choose File"}
                       <input
                         type="file"
                         accept="image/*"
                         disabled={uploadingFile !== null}
-                        onChange={(e) => handleFileUpload(e, 'main')}
+                        onChange={(e) => handleFileUpload(e, "main")}
                         className="hidden"
                       />
                     </label>
@@ -667,8 +764,13 @@ export default function AdminDashboardClient({
                   </div>
                   <input
                     type="text"
-                    value={editingProduct.alt || ''}
-                    onChange={(e) => setEditingProduct(prev => ({ ...prev, alt: e.target.value }))}
+                    value={editingProduct.alt || ""}
+                    onChange={(e) =>
+                      setEditingProduct((prev) => ({
+                        ...prev,
+                        alt: e.target.value,
+                      }))
+                    }
                     placeholder="Image alt description (for screen readers and SEO)"
                     className="w-full h-10 px-4 bg-stone-900 border border-stone-800 rounded-md focus:border-amber-500/30 text-stone-200 outline-none text-xs"
                   />
@@ -684,31 +786,39 @@ export default function AdminDashboardClient({
                     Product Page Media Gallery (Images & Videos)
                   </label>
                   <label className="text-[10px] uppercase tracking-[0.15em] text-amber-500 hover:text-amber-400 font-semibold cursor-pointer transition-colors disabled:opacity-50">
-                    {uploadingFile === 'gallery' ? 'Uploading Media...' : '+ Add Media Assets'}
+                    {uploadingFile === "gallery"
+                      ? "Uploading Media..."
+                      : "+ Add Media Assets"}
                     <input
                       type="file"
                       accept="image/*,video/*"
                       multiple
                       disabled={uploadingFile !== null}
-                      onChange={(e) => handleFileUpload(e, 'gallery')}
+                      onChange={(e) => handleFileUpload(e, "gallery")}
                       className="hidden"
                     />
                   </label>
                 </div>
                 <p className="text-stone-500 text-[10px] leading-relaxed">
-                  Upload supplementary images or short showcase videos to be displayed in the dynamic media grid on the product's details page.
+                  Upload supplementary images or short showcase videos to be
+                  displayed in the dynamic media grid on the product&apos;s
+                  details page.
                 </p>
               </div>
 
               {formMedia.length === 0 ? (
                 <div className="w-full border border-dashed border-stone-800 p-8 text-center text-stone-600 text-xs uppercase tracking-widest">
-                  No additional media. Click "+ Add Media Assets" to upload images or videos.
+                  No additional media. Click &quot;+ Add Media Assets&quot; to
+                  upload images or videos.
                 </div>
               ) : (
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                   {formMedia.map((media, idx) => (
-                    <div key={idx} className="relative aspect-[4/3] border border-stone-800 bg-stone-950 group overflow-hidden">
-                      {media.type === 'video' ? (
+                    <div
+                      key={idx}
+                      className="relative aspect-[4/3] border border-stone-800 bg-stone-950 group overflow-hidden"
+                    >
+                      {media.type === "video" ? (
                         <video
                           src={media.url}
                           muted
@@ -718,7 +828,7 @@ export default function AdminDashboardClient({
                       ) : (
                         <Image
                           src={media.url}
-                          alt={media.alt || ''}
+                          alt={media.alt || ""}
                           fill
                           sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 200px"
                           className="object-cover"
@@ -726,7 +836,7 @@ export default function AdminDashboardClient({
                       )}
 
                       {/* Video indicator badge */}
-                      {media.type === 'video' && (
+                      {media.type === "video" && (
                         <div className="absolute top-2 left-2 bg-stone-950/80 px-1.5 py-0.5 rounded text-[8px] uppercase tracking-wider text-amber-500 font-bold border border-amber-500/20">
                           Video
                         </div>
@@ -764,7 +874,10 @@ export default function AdminDashboardClient({
               </button>
               <button
                 type="button"
-                onClick={() => { setIsEditing(false); setEditingProduct(null); }}
+                onClick={() => {
+                  setIsEditing(false);
+                  setEditingProduct(null);
+                }}
                 className="h-11 px-8 rounded-full border border-stone-850 text-stone-400 font-semibold text-xs uppercase tracking-[0.15em] hover:border-stone-700 hover:text-stone-300 transition-all duration-300 cursor-pointer"
               >
                 Cancel

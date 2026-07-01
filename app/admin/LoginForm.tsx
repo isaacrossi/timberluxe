@@ -38,7 +38,7 @@ export default function LoginForm() {
     <form onSubmit={handleSubmit} className="w-full flex flex-col gap-5">
       <div className="flex flex-col gap-2">
         <label className="text-[9px] uppercase tracking-[0.2em] text-stone-500 font-semibold">
-          Enter Atelier Passcode
+          Enter Admin Passcode
         </label>
         <input
           type="password"
@@ -65,7 +65,7 @@ export default function LoginForm() {
         {loading ? (
           <span className="w-5 h-5 border-2 border-stone-950 border-t-transparent rounded-full animate-spin" />
         ) : (
-          "Access Atelier"
+          "Access Dashboard"
         )}
       </button>
     </form>

@@ -18,8 +18,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Timberluxe | Luxury Architectural Woodworking",
-  description: "Exquisite timber designs sculpted by nature, refined by master craftsmen.",
+  title: "Timberluxe",
+  description: "Handcrafted ornamental timber and resin art",
 };
 
 export default function RootLayout({
