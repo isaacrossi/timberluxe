@@ -29,7 +29,8 @@
           "value": "Satin Wood Wax"
         }
       ],
-      "media": []
+      "media": [],
+      "sold": true
     },
     {
       "id": "charcoal-serving-board",
@@ -68,25 +69,9 @@
       "description": "A dramatic river board featuring English burr timber separated by a deep, semi-translucent teal resin flow. Shows off stunning live edges and rich timber patterns.",
       "image": "/teal_resin.jpg",
       "alt": "English burr wood and teal resin river board",
-      "specs": [
-        {
-          "label": "Timber",
-          "value": "English Burr Oak"
-        },
-        {
-          "label": "Resin",
-          "value": "Teal Translucent Epoxy"
-        },
-        {
-          "label": "Dimensions",
-          "value": "20\" x 9\" x 1.1\""
-        },
-        {
-          "label": "Finish",
-          "value": "High-Gloss Polish"
-        }
-      ],
-      "media": []
+      "specs": [],
+      "media": [],
+      "sold": true
     }
   ]
 }

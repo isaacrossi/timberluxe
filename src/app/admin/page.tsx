@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
 import { getProducts, getAboutText } from '@/lib/db';
-import AdminDashboardClient from './AdminDashboardClient';
+import { AdminDashboard } from '@/features/admin';
 
 export default async function AdminPage() {
   const cookieStore = await cookies();
@@ -16,7 +16,7 @@ export default async function AdminPage() {
   const aboutText = await getAboutText();
 
   return (
-    <AdminDashboardClient 
+    <AdminDashboard 
       initialProducts={products} 
       initialAboutText={aboutText} 
     />
@@ -47,4 +47,4 @@ function AdminLogin() {
 }
 
 // Client Component form for input handling
-import LoginForm from './LoginForm';
+import { LoginForm } from '@/features/admin';

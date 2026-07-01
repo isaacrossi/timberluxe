@@ -1,21 +1,21 @@
 "use client";
 
-import { useState } from 'react';
+import { useState } from "react";
 
 export default function LoginForm() {
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
+    setError("");
 
     try {
-      const res = await fetch('/api/admin/verify', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("/api/admin/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ password }),
       });
 
@@ -24,11 +24,11 @@ export default function LoginForm() {
       if (res.ok && data.success) {
         window.location.reload();
       } else {
-        setError(data.error || 'Invalid credentials');
+        setError(data.error || "Invalid credentials");
       }
     } catch (err) {
       console.error(err);
-      setError('Connection failed. Please try again.');
+      setError("Connection failed. Please try again.");
     } finally {
       setLoading(false);
     }

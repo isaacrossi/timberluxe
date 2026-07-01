@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { ProductMedia } from '@/lib/products';
+import { ProductMedia } from '@/lib/db';
 
 interface ProductMediaGalleryProps {
   mainImage: string;
