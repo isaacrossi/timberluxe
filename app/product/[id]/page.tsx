@@ -1,9 +1,12 @@
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { products } from "@/lib/products";
-import ParallaxImage from "@/components/ParallaxImage";
+import { getProductById } from "@/lib/db";
+import ProductMediaGallery from "@/components/ProductMediaGallery";
+import CheckoutButton from "@/components/CheckoutButton";
+import { toCurrencyFromCent } from "@/lib/currency";
+
+export const dynamic = "force-dynamic";
 
 interface ProductPageProps {
   params: Promise<{ id: string }>;
@@ -13,7 +16,7 @@ export async function generateMetadata({
   params,
 }: ProductPageProps): Promise<Metadata> {
   const { id } = await params;
-  const product = products.find((p) => p.id === id);
+  const product = await getProductById(id);
   if (!product) {
     return {
       title: "Product Not Found | Timberluxe",
@@ -25,15 +28,9 @@ export async function generateMetadata({
   };
 }
 
-export async function generateStaticParams() {
-  return products.map((product) => ({
-    id: product.id,
-  }));
-}
-
 export default async function ProductPage({ params }: ProductPageProps) {
   const { id } = await params;
-  const product = products.find((p) => p.id === id);
+  const product = await getProductById(id);
 
   if (!product) {
     notFound();
@@ -62,14 +59,12 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
         {/* Main content grid */}
         <main className="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center z-10 w-full my-6 md:my-10">
-          {/* Left: Product Image */}
-          <div className="relative aspect-[4/3] w-full overflow-hidden border border-stone-900/15 bg-stone-900/5 shadow-md">
-            <ParallaxImage
-              src={product.image}
-              alt={product.alt}
-              sizes="(max-width: 1024px) 100vw, 600px"
-              priority
-              speed={10}
+          {/* Left: Product Media Gallery (Images & Videos) */}
+          <div className="w-full">
+            <ProductMediaGallery
+              mainImage={product.image}
+              mainAlt={product.alt}
+              media={product.media}
             />
           </div>
 
@@ -82,7 +77,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
               {product.name}
             </h1>
             <div className="font-sans font-light text-2xl text-stone-900 mt-4 tracking-wide">
-              {product.price}
+              {toCurrencyFromCent(Number(product.price))}
             </div>
 
             <div className="w-full h-px bg-stone-900/15 my-6" />
@@ -111,13 +106,20 @@ export default async function ProductPage({ params }: ProductPageProps) {
               ))}
             </div>
 
-            {/* CTA */}
-            <div className="mt-8 flex flex-col sm:flex-row gap-4">
+            {/* CTA Buttons */}
+            <div className="mt-8 flex flex-col sm:flex-row gap-4 items-center">
+              {product.sold ? (
+                <div className="h-12 px-8 flex items-center justify-center rounded-full bg-stone-250 border border-stone-300/65 text-stone-500 font-semibold text-xs uppercase tracking-[0.15em] cursor-not-allowed">
+                  Sold / Acquired
+                </div>
+              ) : (
+                <CheckoutButton productId={product.id} />
+              )}
               <Link
                 href="/#inquire"
-                className="h-12 px-8 flex items-center justify-center rounded-full bg-stone-900 text-stone-100 font-semibold text-xs uppercase tracking-[0.15em] hover:bg-stone-800 transition-all duration-300 shadow-[0_4px_15px_rgba(0,0,0,0.1)] hover:scale-[1.01]"
+                className="h-12 px-8 flex items-center justify-center rounded-full border border-stone-850 text-stone-700 font-semibold text-xs uppercase tracking-[0.15em] hover:border-stone-900 hover:text-stone-900 transition-all duration-300 hover:scale-[1.01]"
               >
-                Inquire About This Piece
+                Make an Inquiry
               </Link>
             </div>
           </div>

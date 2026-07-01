@@ -3,15 +3,23 @@ export interface ProductSpec {
   value: string;
 }
 
+export interface ProductMedia {
+  type: 'image' | 'video';
+  url: string;
+  alt?: string;
+}
+
 export interface Product {
   id: string;
   name: string;
-  price: string;
+  price: number | string;
   subtitle: string;
   description: string;
   image: string;
   alt: string;
   specs: ProductSpec[];
+  media?: ProductMedia[];
+  sold?: boolean;
 }
 
 export const products: Product[] = [

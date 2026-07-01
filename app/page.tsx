@@ -1,14 +1,15 @@
-"use client";
-
 import { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import HeroShader from "@/components/HeroShader";
 import ParallaxImage from "@/components/ParallaxImage";
 import InquiryForm from "@/components/InquiryForm";
-import { products } from "@/lib/products";
+import { getProducts, getAboutText } from "@/lib/db";
+import { toCurrencyFromCent } from "@/lib/currency";
 
-export default function Home() {
+export default async function Home() {
+  const products = await getProducts();
+  const aboutText = await getAboutText();
   return (
     <div className="relative min-h-screen w-full bg-[#18181a]">
       {/* 1. STICKY HERO SECTION (stays pinned behind as you scroll) */}
@@ -128,9 +129,15 @@ export default function Home() {
                       <h3 className="font-sans font-light text-stone-900 text-base tracking-wide">
                         {product.name}
                       </h3>
-                      <span className="font-sans font-light text-stone-900 text-base tracking-wide shrink-0">
-                        {product.price}
-                      </span>
+                      {product.sold ? (
+                        <span className="text-[10px] uppercase tracking-[0.2em] px-2 py-0.5 rounded border border-stone-900/30 text-stone-600 font-semibold font-mono">
+                          Sold
+                        </span>
+                      ) : (
+                        <span className="font-sans font-light text-stone-900 text-base tracking-wide shrink-0">
+                          {toCurrencyFromCent(Number(product.price))}
+                        </span>
+                      )}
                     </div>
                     <span className="text-[9px] uppercase tracking-[0.2em] text-stone-500 font-bold mt-1">
                       {product.subtitle}
@@ -157,10 +164,7 @@ export default function Home() {
               {/* Right Column: Copy */}
               <div className="p-6 md:p-12 lg:p-16 flex flex-col justify-center">
                 <p className="text-stone-100 font-serif font-light text-3xl md:text-5xl lg:text-6xl tracking-tight leading-tight">
-                  Timberluxe is a Sydney-based design studio crafting
-                  functional, ornamental timber and resin art. We source unique,
-                  high-character burl and salvaged slabs, honoring the
-                  timber&apos;s organic imperfections.
+                  {aboutText}
                 </p>
               </div>
             </div>
